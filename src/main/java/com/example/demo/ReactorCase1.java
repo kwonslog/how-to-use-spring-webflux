@@ -13,4 +13,8 @@ public class ReactorCase1 {
             .subscribe(System.out::println);
     }
 
+    public static void case2() {
+        
+    }
+
 }
