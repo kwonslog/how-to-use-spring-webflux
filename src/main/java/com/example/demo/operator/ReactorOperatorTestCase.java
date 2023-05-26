@@ -1,6 +1,9 @@
 package com.example.demo.operator;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -8,16 +11,22 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class ReactorOperatorTestCase {
 
-  public static void main(String[] args) {
-    try {
-      //zip();
-      and();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  private static Map<String, Consumer<String>> methodMap = new HashMap<>();
+
+  static {
+    methodMap.put("zip", notUse -> zip());
+    methodMap.put("and", notUse -> and());
   }
 
-  private static void zip() throws Exception {
+  public static void main(String[] args) {
+    selector("and");
+  }
+
+  private static void selector(String method) {
+    methodMap.get(method).accept("notUse");
+  }
+
+  private static void zip() {
     Flux
       .zip(
         //2개의 Flux 를 하나로 묶어 준다.
@@ -30,10 +39,14 @@ public class ReactorOperatorTestCase {
       )
       .subscribe(tuple2 -> log.info("# onNext: {}", tuple2));
 
-    Thread.sleep(25000L);
+    try {
+      Thread.sleep(25000L);
+    } catch (InterruptedException e) {
+      log.error("zip error", e);
+    }
   }
 
-  private static void and() throws Exception {
+  private static void and() {
     //예제를 실행해 보면 onComplete 가 호출되고 끝이난다.
     //upstream 에서 뭔가 수행하고 and() 를 사용해서 마지막 작업을 할때 사용하는 식??
     Mono
@@ -52,7 +65,11 @@ public class ReactorOperatorTestCase {
         () -> log.info("# onComplete")
       );
 
-    Thread.sleep(5000);
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      log.error("and error", e);
+    }
   }
 
   private static void test() throws Exception {}
