@@ -72,5 +72,7 @@ public class ReactorOperatorTestCase {
     }
   }
 
-  private static void test() throws Exception {}
+  private static void test() throws Exception {
+    log.debug("test");
+  }
 }
