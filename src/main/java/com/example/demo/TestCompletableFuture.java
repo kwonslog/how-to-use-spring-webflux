@@ -1,8 +1,9 @@
 package com.example.demo;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TestCompletableFuture {
 
   /*
@@ -17,29 +18,28 @@ public class TestCompletableFuture {
    * 논블록킹 : 하나의 작업을 실행하고 또다른 작업을 실행 하는 동작.
    *
    */
-  public static void main(String[] args)
-    throws InterruptedException, ExecutionException {
+  public static void main(String[] args) {
     //CompletableFuture 비동기 처리를 위한 기능을 제공한다.
 
-    print("\n case 1 ---");
+    log.debug("case 1 ---");
     case1();
-    print("\n case 2 ---");
+    log.debug("case 2 ---");
     case2();
-    print("\n case 3 ---");
+    log.debug("case 3 ---");
     case3();
-    print("\n case 4 ---");
+    log.debug("case 4 ---");
     case4();
-    print("\n case 5 ---");
+    log.debug("case 5 ---");
     case5();
-    print("\n case 6 ---");
+    log.debug("case 6 ---");
     case6();
-    print("\n case 7 ---");
+    log.debug("case 7 ---");
     case7();
-    print("\n case 8 ---");
+    log.debug("case 8 ---");
     case8();
-    print("\n case 9 ---");
+    log.debug("case 9 ---");
     case9();
-    print("\n case 10 ---");
+    log.debug("case 10 ---");
     case10();
   }
 
@@ -51,7 +51,7 @@ public class TestCompletableFuture {
     );
 
     String result = supplyAsync.join();
-    print(result);
+    log.debug(result);
   }
 
   public static void case2() {
@@ -65,7 +65,7 @@ public class TestCompletableFuture {
     //예제코드와 같이 단순히 결과값이 필요한 경우 join 메소드를 사용하는 것이 더 편리함.
     String result = supplyAsync.thenApply(value -> value + " world").join();
 
-    print(result);
+    log.debug(result);
   }
 
   public static void case3() {
@@ -75,7 +75,7 @@ public class TestCompletableFuture {
     );
 
     //supplyAsync 결과값을 받아서 소모함.
-    supplyAsync.thenAccept(value -> print(value + " world"));
+    supplyAsync.thenAccept(value -> log.debug(value + " world"));
   }
 
   public static void case4() {
@@ -86,27 +86,22 @@ public class TestCompletableFuture {
 
     //supplyAsync 결과값을 받아서 추가적인 처리를 여러개 붙일수 있다.
     //체이닝된 thenApply 메소드는 동기적으로 호출 된다.
-    print("main thread: " + Thread.currentThread().getName());
     String result = supplyAsync
       .thenApply(value -> {
-        print("async thread1: " + Thread.currentThread().getName());
         return value + " world";
       })
       .thenApply(value -> {
-        print("async thread2: " + Thread.currentThread().getName());
         return value + " 1";
       })
       .thenApply(value -> {
-        print("async thread3: " + Thread.currentThread().getName());
         return value + " 2";
       })
       .thenApply(value -> {
-        print("async thread4: " + Thread.currentThread().getName());
         return value + " 3";
       })
       .join();
 
-    print(result);
+    log.debug(result);
   }
 
   public static void case5() {
@@ -115,35 +110,30 @@ public class TestCompletableFuture {
       }
     );
 
-    print("main thread: " + Thread.currentThread().getName());
     String result = supplyAsync
       .thenCompose(value ->
         CompletableFuture.supplyAsync(() -> {
-          print("async thread1: " + Thread.currentThread().getName());
           return value + " world";
         })
       )
       .thenCompose(value ->
         CompletableFuture.supplyAsync(() -> {
-          print("async thread2: " + Thread.currentThread().getName());
           return value + " 1";
         })
       )
       .thenCompose(value ->
         CompletableFuture.supplyAsync(() -> {
-          print("async thread3: " + Thread.currentThread().getName());
           return value + " 2";
         })
       )
       .thenCompose(value ->
         CompletableFuture.supplyAsync(() -> {
-          print("async thread4: " + Thread.currentThread().getName());
           return value + " 3";
         })
       )
       .join();
 
-    print(result);
+    log.debug(result);
   }
 
   public static void case6() {
@@ -155,27 +145,22 @@ public class TestCompletableFuture {
     //supplyAsync 결과값을 받아서 추가적인 처리를 여러개 붙일수 있다.
     //체이닝된 thenApplyAsync 메소드는 비동기적으로 호출 된다.
 
-    print("main thread: " + Thread.currentThread().getName());
     String result = supplyAsync
       .thenApplyAsync(value -> {
-        print("async thread1: " + Thread.currentThread().getName());
         return value + " world";
       })
       .thenApplyAsync(value -> {
-        print("async thread2: " + Thread.currentThread().getName());
         return value + " 1";
       })
       .thenApplyAsync(value -> {
-        print("async thread3: " + Thread.currentThread().getName());
         return value + " 2";
       })
       .thenApplyAsync(value -> {
-        print("async thread4: " + Thread.currentThread().getName());
         return value + " 3";
       })
       .join();
 
-    print(result);
+    log.debug(result);
   }
 
   public static void case7() {
@@ -205,16 +190,12 @@ public class TestCompletableFuture {
     String result1 = thenApply.join().join();
     String result2 = thenCompose.join();
 
-    print(result1);
-    print(result2);
+    log.debug(result1);
+    log.debug(result2);
   }
 
   public static void case8() {
-    print("main thread: " + Thread.currentThread().getName());
-
     CompletableFuture<String> supplyAsync1 = CompletableFuture.supplyAsync(() -> {
-        print("async1 thread : " + Thread.currentThread().getName());
-
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -226,8 +207,6 @@ public class TestCompletableFuture {
     );
 
     CompletableFuture<String> supplyAsync2 = CompletableFuture.supplyAsync(() -> {
-        print("async2 thread : " + Thread.currentThread().getName());
-
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -243,17 +222,11 @@ public class TestCompletableFuture {
       (v1, v2) -> v1 + v2
     );
 
-    print("--요기 나오나?");
-
-    print(result.join());
+    log.debug(result.join());
   }
 
   public static void case9() {
-    print("main thread: " + Thread.currentThread().getName());
-
     CompletableFuture<String> supplyAsync1 = CompletableFuture.supplyAsync(() -> {
-        print("async1 thread : " + Thread.currentThread().getName());
-
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -265,8 +238,6 @@ public class TestCompletableFuture {
     );
 
     CompletableFuture<String> supplyAsync2 = CompletableFuture.supplyAsync(() -> {
-        print("async2 thread : " + Thread.currentThread().getName());
-
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -282,14 +253,10 @@ public class TestCompletableFuture {
       (v1, v2) -> v1 + v2
     );
 
-    print("--요기 나오나?");
-
-    print(result.join());
+    log.debug(result.join());
   }
 
   public static void case10() {
-    print("main thread: " + Thread.currentThread().getName());
-
     CompletableFuture<String> supplyAsync = CompletableFuture.supplyAsync(() -> {
         throw new RuntimeException("예외발생");
       }
@@ -302,10 +269,6 @@ public class TestCompletableFuture {
       })
       .join();
 
-    print(result);
-  }
-
-  public static void print(Object o) {
-    System.out.println(o);
+    log.debug(result);
   }
 }
