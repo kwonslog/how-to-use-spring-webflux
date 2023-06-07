@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
+
     // https://mvnrepository.com/artifact/io.smallrye.reactive/mutiny
     implementation 'io.smallrye.reactive:mutiny:2.2.0'
 
