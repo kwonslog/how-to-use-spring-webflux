@@ -32,11 +32,5 @@ public class AsyncExample2 {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-
-    AsyncExample2.Test1 test11 = new AsyncExample2.Test1();
   }
-
-  class Test1 {}
 }
-
-class Test2 {}
