@@ -26,4 +26,32 @@ public class WelcomeHandler {
       .contentType(MediaType.TEXT_PLAIN)
       .body(BodyInserters.fromValue("Welcome2!"));
   }
+
+  public Mono<ServerResponse> welcome3(ServerRequest request) {
+    return ServerResponse
+      .ok()
+      .contentType(MediaType.TEXT_PLAIN)
+      .body(BodyInserters.fromValue("Welcome3!"));
+  }
+
+  public Mono<ServerResponse> welcome4(ServerRequest request) {
+    return ServerResponse
+      .ok()
+      .contentType(MediaType.TEXT_PLAIN)
+      .body(BodyInserters.fromValue("Welcome4!"));
+  }
+
+  public Mono<ServerResponse> welcome5(ServerRequest request) {
+    return ServerResponse
+      .ok()
+      .contentType(MediaType.TEXT_PLAIN)
+      .body(BodyInserters.fromValue("Welcome5!"));
+  }
+
+  public Mono<ServerResponse> welcome7(ServerRequest request) {
+    return ServerResponse
+      .ok()
+      .contentType(MediaType.TEXT_PLAIN)
+      .body(BodyInserters.fromValue("Welcome7!"));
+  }
 }
