@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+
+  <script>
+    // WebSocket 연결을 생성하는 함수
+    function connectWebSocket() {
+      // WebSocket 객체 생성
+      var socket = new WebSocket("ws://localhost:8080/echo");
+
+      // WebSocket 연결이 열린 경우
+      socket.onopen = function() {
+        console.log("WebSocket 연결이 열렸습니다.");
+        // 이곳에 연결이 열린 후 수행할 작업을 추가할 수 있습니다.
+
+		socket.send("hello");
+      };
+
+      // WebSocket 메시지를 수신한 경우
+      socket.onmessage = function(event) {
+        var message = event.data;
+        console.log("수신한 메시지: " + message);
+        // 이곳에 수신한 메시지를 처리하는 작업을 추가할 수 있습니다.
+      };
+
+      // WebSocket 연결이 닫힌 경우
+      socket.onclose = function(event) {
+        console.log("WebSocket 연결이 닫혔습니다.");
+        // 이곳에 연결이 닫힌 후 수행할 작업을 추가할 수 있습니다.
+      };
+
+      // WebSocket 에러가 발생한 경우
+      socket.onerror = function(error) {
+        console.error("WebSocket 에러가 발생했습니다:", error);
+      };
+    }
+
+    // 페이지 로드 시 WebSocket 연결 생성
+    window.onload = function() {
+      connectWebSocket();
+    };
+  </script>
+ </head>
+ <body>
+  
+ </body>
+</html>
