@@ -3,6 +3,7 @@ package com.example.demo.webflux.basic.router;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -27,9 +28,7 @@ import reactor.core.publisher.Mono;
 public class WelcomeRouter {
 
   @Bean
-  public RouterFunction<ServerResponse> welcomeRoute(
-    WelcomeHandler welcomeHandler
-  ) {
+  public RouterFunction<ServerResponse> welcomeRoute(WelcomeHandler welcomeHandler) {
     // return RouterFunctions.route(
     //   RequestPredicates.GET("/welcome"),
     //   welcomeHandler::welcome
@@ -42,19 +41,12 @@ public class WelcomeRouter {
   }
 
   @Bean
-  public RouterFunction<ServerResponse> testRoute(
-    WelcomeHandler welcomeHandler
-  ) {
-    return RouterFunctions.route(
-      RequestPredicates.GET("/welcome3"),
-      welcomeHandler::welcome3
-    );
+  public RouterFunction<ServerResponse> testRoute(WelcomeHandler welcomeHandler) {
+    return RouterFunctions.route(RequestPredicates.GET("/welcome3"), welcomeHandler::welcome3);
   }
 
   @Bean
-  public RouterFunction<ServerResponse> testNest(
-    WelcomeHandler welcomeHandler
-  ) {
+  public RouterFunction<ServerResponse> testNest(WelcomeHandler welcomeHandler) {
     /**
      * /test/welcome4
      * /test/welcome5
@@ -77,24 +69,14 @@ public class WelcomeRouter {
     /*
      * /static/ 경로로 시작되는 요청에 대한 정적 리소스를 제공한다.
      */
-    return RouterFunctions.resources(
-      "/static/**",
-      new ClassPathResource("/static/")
-    );
+    return RouterFunctions.resources("/static/**", new ClassPathResource("/static/"));
   }
 
   @Bean
   public RouterFunction<ServerResponse> testDirectHandler() {
     return RouterFunctions
       .route()
-      .GET(
-        "/welcome6",
-        request ->
-          ServerResponse
-            .ok()
-            .contentType(MediaType.TEXT_PLAIN)
-            .bodyValue("welcome6!!")
-      )
+      .GET("/welcome6", request -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue("welcome6!!"))
       .build();
   }
 
@@ -102,10 +84,7 @@ public class WelcomeRouter {
   public RouterFunction<ServerResponse> testRouteAccept() {
     WelcomeHandler wh = new WelcomeHandler();
 
-    RouterFunction<ServerResponse> route = RouterFunctions
-      .route()
-      .GET("/welcome7", wh::welcome7)
-      .build();
+    RouterFunction<ServerResponse> route = RouterFunctions.route().GET("/welcome7", wh::welcome7).build();
 
     /*
      * Visitor 패턴
@@ -124,10 +103,7 @@ public class WelcomeRouter {
         }
 
         @Override
-        public void route(
-          RequestPredicate predicate,
-          HandlerFunction<?> handlerFunction
-        ) {
+        public void route(RequestPredicate predicate, HandlerFunction<?> handlerFunction) {
           log.debug("Visitor : route");
           log.debug("Visitor : {}", predicate);
           log.debug("Visitor : {}", handlerFunction);
@@ -140,9 +116,7 @@ public class WelcomeRouter {
         }
 
         @Override
-        public void resources(
-          Function<ServerRequest, Mono<Resource>> lookupFunction
-        ) {
+        public void resources(Function<ServerRequest, Mono<Resource>> lookupFunction) {
           log.debug("Visitor : resources");
         }
 
@@ -187,31 +161,19 @@ public class WelcomeRouter {
   public RouterFunction<ServerResponse> testRouteAndNest() {
     RouterFunction<ServerResponse> helloRouter = RouterFunctions
       .route()
-      .GET(
-        "/hello2",
-        request -> ServerResponse.ok().bodyValue("Hello, World! - 2")
-      )
+      .GET("/hello2", request -> ServerResponse.ok().bodyValue("Hello, World! - 2"))
       .build();
     RouterFunction<ServerResponse> greetRouter = RouterFunctions
       .route()
-      .GET(
-        "/greet2",
-        request -> ServerResponse.ok().bodyValue("Greetings! - 2")
-      )
+      .GET("/greet2", request -> ServerResponse.ok().bodyValue("Greetings! - 2"))
       .build();
 
     //호출 /api/hello2
-    RouterFunction<ServerResponse> nestedRouter = RouterFunctions.nest(
-      RequestPredicates.path("/api"),
-      helloRouter
-    );
+    RouterFunction<ServerResponse> nestedRouter = RouterFunctions.nest(RequestPredicates.path("/api"), helloRouter);
 
     //호출 /greet2
     //호출 /sub/api/hello2
-    RouterFunction<ServerResponse> combinedRouter = greetRouter.andNest(
-      RequestPredicates.path("/sub"),
-      nestedRouter
-    );
+    RouterFunction<ServerResponse> combinedRouter = greetRouter.andNest(RequestPredicates.path("/sub"), nestedRouter);
 
     /*
      * RouterFunction.nest 메소드를 사용하여 계층구조를 만들수 있다.
@@ -225,18 +187,12 @@ public class WelcomeRouter {
   public RouterFunction<ServerResponse> testRouteAndOther() {
     RouterFunction<ServerResponse> helloRouter30 = RouterFunctions
       .route()
-      .GET(
-        "/hello30",
-        request -> ServerResponse.ok().bodyValue("Hello, World! - 30")
-      )
+      .GET("/hello30", request -> ServerResponse.ok().bodyValue("Hello, World! - 30"))
       .build();
 
     RouterFunction<ServerResponse> helloRouter31 = RouterFunctions
       .route()
-      .GET(
-        "/hello30",
-        request -> ServerResponse.ok().bodyValue("Hello, World! - 31")
-      )
+      .GET("/hello30", request -> ServerResponse.ok().bodyValue("Hello, World! - 31"))
       .build();
 
     /*
@@ -260,10 +216,7 @@ public class WelcomeRouter {
       .GET("/value1", request -> ServerResponse.ok().bodyValue("value1 ok"))
       .build();
 
-    HandlerFilterFunction<ServerResponse, ServerResponse> hff = (
-      request,
-      next
-    ) -> {
+    HandlerFilterFunction<ServerResponse, ServerResponse> hff = (request, next) -> {
       Mono<ServerResponse> responseMono = null;
 
       //요청값에 name 파라메터가 있는 경우와 없는 경우를 구분해서 처리.
@@ -284,10 +237,7 @@ public class WelcomeRouter {
   public RouterFunction<ServerResponse> testAndRoute() {
     RouterFunction<ServerResponse> route = RouterFunctions
       .route()
-      .GET(
-        "/androute",
-        request -> ServerResponse.ok().bodyValue("androute test!")
-      )
+      .GET("/androute", request -> ServerResponse.ok().bodyValue("androute test!"))
       .build();
 
     /*
@@ -313,6 +263,17 @@ public class WelcomeRouter {
       )
       //attr 을 추가
       .withAttribute("attr", "attr value !")
+      .build();
+
+    return route;
+  }
+
+  @Bean
+  public RouterFunction<ServerResponse> indexRouter(@Value("classpath:/static/index.html") final Resource indexHtml) {
+    RouterFunction<ServerResponse> route = RouterFunctions
+      .route()
+      //.GET("/index", request -> ServerResponse.ok().contentType(MediaType.TEXT_HTML).syncBody(indexHtml))
+      .GET("/index", request -> ServerResponse.ok().contentType(MediaType.TEXT_HTML).bodyValue(indexHtml))
       .build();
 
     return route;
